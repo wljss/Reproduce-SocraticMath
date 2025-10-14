@@ -2,6 +2,8 @@
 
 复现[论文](https://dl.acm.org/doi/10.1145/3627673.3679881)
 
+要使用py文件的话把.ipynb文件一段段粘出来就行。
+
 environment.yaml 是用到的python环境，使用conda导出的
 
 导出python环境指令：
