@@ -56,6 +56,11 @@ for name, module in model.named_modules():
     if isinstance(module, torch.nn.Linear):
         print(name)
 ```
+---
+
+基于卷积的编码是一种局部的编码方式，之间摸了输入数据的局部依赖关系。
+
+循环神经网络RNN能够捕捉序列中的时间依赖关系，但是对长序列记忆能力弱，或出现梯度消失/梯度爆炸和信息传递容量的问题。
 
 ---
 
