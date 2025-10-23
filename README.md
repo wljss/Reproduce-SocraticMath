@@ -14,6 +14,10 @@ conda env export > environment.yaml
 
 conda env create -f environment.yaml
 
+想要后台运行请使用以下命令：nohup python train.py &
+
+后台运行输出会输出到nohup.out里
+
 编写边学ing
 
 ### LoRA（Low-Rank Adaptation of Large Language Models）微调,大语言模型的低秩适应。

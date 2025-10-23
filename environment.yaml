@@ -88,6 +88,7 @@ dependencies:
     - anyio==4.11.0
     - async-timeout==5.0.1
     - attrs==25.4.0
+    - bitsandbytes==0.48.1
     - certifi==2025.10.5
     - charset-normalizer==3.4.3
     - datasets==4.2.0
