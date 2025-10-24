@@ -54,12 +54,12 @@ def setup_LoRA(model): #初始化LoRA，模型更新W' = W + ΔW中ΔW可以用�
     
     
     lora_config = LoraConfig( #LoRA配置
-        r=8, #LoRA秩,很重要的一个参数。r越小训练越快，但拟合能力会下降
-        lora_alpha=16, #LoRA alpha参数，用于对ΔW进行缩放,通常为LoRA秩的两倍
-        target_modules=["q_proj", "v_proj", "gate_proj", "down_proj"], #指定在哪些层应用LoRA，分别是注意力机制的Query Projection和Value Projection，前馈神经网络FFN的Gate Projection和Down Projection
+        r=64, #LoRA秩,很重要的一个参数。r越小训练越快，但拟合能力会下降
+        lora_alpha=128, #LoRA alpha参数，用于对ΔW进行缩放,通常为LoRA秩的两倍
+        target_modules=["q_proj", "v_proj"], #指定在哪些层应用LoRA，"q_proj", "v_proj"分别是注意力机制的Query Projection和Value Projection，可以考虑"gate_proj", "down_proj"，是前馈神经网络FFN的Gate Projection和Down Projection
         lora_dropout=0.1, #正则化，dropout率，防止过拟合，
         bias="none", #不训练偏置参数
-        task_type="QUESTION_ANS", #指定任务类型，这里是问答任务。CAUSAL_LM是对话，后面会试试
+        task_type="CAUSAL_LM", #指定任务类型，这里是问答任务。CAUSAL_LM是对话，后面会试试
     )
     
     model = get_peft_model(model, lora_config) #将LoRA适配器应用到原来的模型上
@@ -100,7 +100,8 @@ def format_data(example): #使用适合对话的格式，格式化数据。直�
     错误写法：return f"<|im_start|>user\n{example['problem']}<|im_end|>\n<|im_start|>assistant\n{example['dialogue']}<|im_end|>"
     '''
     dialogue_data=example['dialogue'].split('\n')
-    formatted_dialogue=''
+    system_prompt='你将使用苏格拉底教学法辅导学生，通过回顾（知识点）、启发（解题思路）、总结（解题流程）等方式一步一步地引导学生自己进行解题。你需要遵守以下规则：1.面对学生的问题，不要直接告诉答案，而是引导学生自己解题。2.对于学生的回答，你要检查其是否存在错误（有解析则结合解析判断），如有错误，则提醒学生让其改正。3.如果问题提供了解析，则参考解析进行教学。'
+    formatted_dialogue=f'<|im_start|>system\n{system_prompt}<|im_end|>\n'
 
     begin_flag=0
     content=''
@@ -112,7 +113,7 @@ def format_data(example): #使用适合对话的格式，格式化数据。直�
 
         if line.startswith('学生：'):
 
-            if begin_flag==0:
+            if begin_flag==0: #这样处理是因为数据里学生说的话会分开不在一行里
                 begin_flag=1
                 content+=line[3:].strip()
             else:
@@ -191,7 +192,7 @@ if __name__ == "__main__":
         output_dir="./qwen1.5-7b-math-teacher", #输出目录
         per_device_train_batch_size=1, #每个设备每次前向传播处理的批量大小
         gradient_accumulation_steps=8, #累积多少次的梯度然后更新权重
-        num_train_epochs=5, #训练轮数
+        num_train_epochs=6, #训练轮数
         learning_rate=3e-4, #论文里的学习率
         fp16=True, #启用混合精度训练，有的时候用16位浮点，有的时候32位，减少显存使用
         logging_steps=10, #训练日志记录间隔
