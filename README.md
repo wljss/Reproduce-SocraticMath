@@ -16,7 +16,9 @@ conda env create -f environment.yaml
 
 想要后台运行请使用以下命令：nohup python train.py &
 
-后台运行输出会输出到nohup.out里
+后台运行输出会输出到nohup.out里。
+
+注意：训练数据SocratesMATH.csv需要用gbk格式打开。数据里面有一部分错误数据，搜索【ProblemID】就能找到，有22个已知的。
 
 编写边学ing
 
