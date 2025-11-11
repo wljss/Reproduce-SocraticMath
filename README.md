@@ -18,7 +18,7 @@ conda env create -f environment.yaml
 
 后台运行输出会输出到nohup.out里。
 
-注意：训练数据SocratesMATH.csv需要用gbk格式打开。数据里面有一部分错误数据，搜索【ProblemID】就能找到，有22个已知的。
+注意：训练数据SocratesMATH.csv需要用gbk格式打开。数据里面有一部分错误数据，搜索【ProblemID】就能找到，有22个已知的。updata:已把错误数据删除
 
 编写边学ing
 
@@ -62,6 +62,13 @@ for name, module in model.named_modules():
     if isinstance(module, torch.nn.Linear):
         print(name)
 ```
+---
+
+正弦/余弦位置编码[学习博客](https://blog.csdn.net/weixin_39190382/article/details/145697544)，其中“3.3.2 内积只和相对位置 k 有关”章节推导过程好像有点问题，自己推一下就好，结果没问题。
+
+现在看来，大多数模型最终都采用了 RoPE 旋转位置编码方法。
+
+---
 ---
 
 基于卷积的编码是一种局部的编码方式，之间摸了输入数据的局部依赖关系。
